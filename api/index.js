@@ -8,7 +8,11 @@ const app = express();
 app.use(express.json());
 
 // 1. CORS LIBERADO GERAL (Essencial para não dar erro de conexão)
-app.use(cors());
+app.use(cors({
+    origin: true, // 👈 O segredo! "True" diz para o backend copiar a origem de quem chamou
+    credentials: true, // Permite cookies/sessões
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
 
 // 2. CONEXÃO COM O BANCO
 const db = mysql.createPool({

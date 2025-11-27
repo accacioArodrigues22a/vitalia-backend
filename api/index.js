@@ -1,4 +1,3 @@
-// PARA RODAR LOCALMENTE: npx nodemon api/index.js
 
 const express = require('express');
 const cors = require('cors');
@@ -7,14 +6,12 @@ const mysql = require('mysql2');
 const app = express();
 app.use(express.json());
 
-// 1. CORS LIBERADO GERAL (Essencial para não dar erro de conexão)
 app.use(cors({
-    origin: true, // 👈 O segredo! "True" diz para o backend copiar a origem de quem chamou
-    credentials: true, // Permite cookies/sessões
+    origin: true, 
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
 
-// 2. CONEXÃO COM O BANCO
 const db = mysql.createPool({
     host: 'benserverplex.ddns.net',
     user: 'alunos',
@@ -25,12 +22,12 @@ const db = mysql.createPool({
     queueLimit: 0
 });
 
-// 3. ROTA DA CAPA (Para você ver que está funcionando na Vercel)
+
 app.get('/', (req, res) => {
     res.send('✅ Backend Vitalia Funcionando! Use as rotas /api/login, /api/cadastrar, etc.');
 });
 
-// 4. ROTEADOR DA API
+
 const router = express.Router();
 
 router.post('/cadastrar', (req, res) => {
@@ -64,7 +61,6 @@ router.post('/salvar-pontuacao', (req, res) => {
     const { userId, pontos } = req.body;
     if (!userId) return res.status(400).json({ error: "ID obrigatório" });
     
-    // Lógica simplificada para salvar recorde
     db.query("SELECT score FROM vitalia_usuarios WHERE id = ?", [userId], (err, results) => {
         if (err) return res.status(500).json({ error: "Erro banco" });
         if (results.length > 0) {
@@ -89,15 +85,9 @@ router.get('/ranking', (req, res) => {
     });
 });
 
-// ==================================================================
-// 5. TRUQUE DO ROTEADOR (O PULO DO GATO 🐱)
-// ==================================================================
-// Isso garante que funcione tanto se a Vercel mandar '/api/login' 
-// quanto se ela mandar só '/login'.
 app.use('/api', router);
 app.use('/', router); 
 
-// Inicialização Local
 if (require.main === module) {
     app.listen(3333, () => console.log('🚀 Backend rodando porta 3333'));
 }

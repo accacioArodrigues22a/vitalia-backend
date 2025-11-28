@@ -130,4 +130,4 @@ A estrutura de rotas no Vercel redireciona todo o tráfego para a pasta `/api`.
 
 ## 📝 Licença
 
-Este projeto está sob a licença ISC.
+Este projeto foi desenvolvido para fins acadêmicos.
